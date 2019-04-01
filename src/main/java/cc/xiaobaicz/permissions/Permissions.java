@@ -1,9 +1,9 @@
 package cc.xiaobaicz.permissions;
 
-import androidx.annotation.NonNull;
-import androidx.fragment.app.FragmentActivity;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
+import android.app.Activity;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
+import android.os.Build;
 
 /**
  * 动态权限申请类
@@ -14,18 +14,25 @@ public final class Permissions {
     /**
      * 申请权限
      */
-    public static void checkPermissions(@NonNull final FragmentActivity activity, @NonNull final  String[] permissions, @NonNull final  Callback callback) {
-        PermissionsFragment fragment = PermissionsFragment.newInstance(permissions, callback);
-        FragmentManager fm = activity.getSupportFragmentManager();
-        FragmentTransaction transaction = fm.beginTransaction();
-        transaction.add(fragment, "permissions");
-        transaction.commit();
+    public static void checkPermissions(final Activity activity, final  String[] permissions, final  Callback callback) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (activity == null) {
+                throw new NullPointerException();
+            }
+            PermissionsFragment fragment = PermissionsFragment.newInstance(permissions, callback);
+            FragmentManager fm = activity.getFragmentManager();
+            FragmentTransaction transaction = fm.beginTransaction();
+            transaction.add(fragment, "permissions");
+            transaction.commit();
+        } else {
+            callback.success();
+        }
     }
 
     /**
      * 申请权限
      */
-    public static void checkPermissions(@NonNull final FragmentActivity activity, @NonNull final  String permissions, @NonNull final  Callback callback) {
+    public static void checkPermissions(final Activity activity, final  String permissions, final  Callback callback) {
         checkPermissions(activity, new String[]{permissions}, callback);
     }
 

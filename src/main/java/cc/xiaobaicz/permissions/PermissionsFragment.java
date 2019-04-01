@@ -1,17 +1,17 @@
 package cc.xiaobaicz.permissions;
 
+import android.annotation.TargetApi;
+import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 
 /**
  * 权限申请碎片
  * @author BC
  */
+@TargetApi(Build.VERSION_CODES.M)
 public final class PermissionsFragment extends Fragment {
 
     private final int CODE_REQUEST = 0x1000;
@@ -20,8 +20,8 @@ public final class PermissionsFragment extends Fragment {
 
     private Callback mCallback;
 
-    static PermissionsFragment newInstance(@NonNull final String[] permissions, @NonNull final Callback callback) {
-        if (permissions.length == 0) {
+    static PermissionsFragment newInstance(final String[] permissions, final Callback callback) {
+        if (permissions == null || permissions.length == 0) {
             throw new NullPointerException();
         }
         PermissionsFragment fragment = new PermissionsFragment();
@@ -32,13 +32,13 @@ public final class PermissionsFragment extends Fragment {
     }
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestPermissions(mPermissions, CODE_REQUEST);
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         if (requestCode == CODE_REQUEST && grantResults.length != 0) {
             boolean success = true;
             for (int result : grantResults) {
