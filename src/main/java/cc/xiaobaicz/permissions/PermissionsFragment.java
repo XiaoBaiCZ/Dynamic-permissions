@@ -3,16 +3,17 @@ package cc.xiaobaicz.permissions;
 import android.annotation.TargetApi;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 
 /**
- * 权限申请碎片
+ * 动态权限申请碎片
  * @author BC
  */
 @TargetApi(Build.VERSION_CODES.M)
-public final class PermissionsFragment extends Fragment {
+public final class PermissionsFragment extends BaseCloseFragment {
 
     private final int CODE_REQUEST = 0x1000;
 
@@ -34,6 +35,18 @@ public final class PermissionsFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        final Context context = getContext();
+        boolean isSuccess = true;
+        for (String p : mPermissions) {
+            if (context.checkSelfPermission(p) != PackageManager.PERMISSION_GRANTED) {
+                isSuccess = false;
+            }
+        }
+        if (isSuccess) {
+            mCallback.success();
+            close();
+            return;
+        }
         requestPermissions(mPermissions, CODE_REQUEST);
     }
 
@@ -51,9 +64,7 @@ public final class PermissionsFragment extends Fragment {
             } else {
                 mCallback.failure();
             }
-            FragmentTransaction transaction = getFragmentManager().beginTransaction();
-            transaction.remove(this);
-            transaction.commit();
+            close();
         }
     }
 
