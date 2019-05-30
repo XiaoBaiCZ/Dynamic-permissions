@@ -4,14 +4,14 @@ Android6.0 动态权限 库
 ### 使用方式
 ~~~java
 String[] permissions = new String[]{申请的权限};
-Permissions.checkPermissions(activity, permissions, new Callback {
+Permissions.checkPermissions(activity, permissions, new Callback2 {
       @Override
       public void success() {
           Log.e(TAG, "success");
       }
 
       @Override
-      public void failure() {
+      public void failure(String[] s) {
           Log.e(TAG, "failure");
       }
 });
@@ -20,14 +20,14 @@ Permissions.checkPermissions(activity, permissions, new Callback {
 ### 1.2.0
 新增8.0安装Apk权限
 ~~~java
-Permissions.checkInstallPackagePermission(activity, new Callback {
+Permissions.checkInstallPackagePermission(activity, new Callback2 {
       @Override
       public void success() {
           Log.e(TAG, "success");
       }
 
       @Override
-      public void failure() {
+      public void failure(String[] s) {
           Log.e(TAG, "failure");
       }
 });

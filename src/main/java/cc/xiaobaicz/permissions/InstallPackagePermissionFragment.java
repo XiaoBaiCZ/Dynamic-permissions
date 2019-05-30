@@ -1,5 +1,6 @@
 package cc.xiaobaicz.permissions;
 
+import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
@@ -48,6 +49,9 @@ public final class InstallPackagePermissionFragment extends BaseCloseFragment {
                 mCallback.success();
             } else {
                 mCallback.failure();
+                if (mCallback instanceof Callback2) {
+                    ((Callback2)mCallback).failure(new String[]{Manifest.permission.REQUEST_INSTALL_PACKAGES});
+                }
             }
             close();
         }
