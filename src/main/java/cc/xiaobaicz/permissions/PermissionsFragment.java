@@ -1,12 +1,12 @@
 package cc.xiaobaicz.permissions;
 
 import android.annotation.TargetApi;
-import android.app.Fragment;
-import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+
+import java.util.HashSet;
 
 /**
  * 动态权限申请碎片
@@ -54,15 +54,24 @@ public final class PermissionsFragment extends BaseCloseFragment {
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         if (requestCode == CODE_REQUEST && grantResults.length != 0) {
             boolean success = true;
+            HashSet<String> failureSet = new HashSet<>();
+            int index = 0;
             for (int result : grantResults) {
                 if (result != PackageManager.PERMISSION_GRANTED) {
                     success = false;
+                    failureSet.add(permissions[index]);
                 }
+                index++;
             }
             if (success) {
                 mCallback.success();
             } else {
+                String[] failures = new String[failureSet.size()];
+                failureSet.toArray(failures);
                 mCallback.failure();
+                if (mCallback instanceof Callback2) {
+                    ((Callback2)mCallback).failure(failures);
+                }
             }
             close();
         }

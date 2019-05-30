@@ -3,6 +3,7 @@ package cc.xiaobaicz.permissions;
 /**
  * 权限申请回调接口
  * @author BC
+ * @deprecated
  */
 public interface Callback {
     /**
@@ -13,5 +14,6 @@ public interface Callback {
     /**
      * 申请失败
      */
+    @Deprecated
     void failure();
 }
