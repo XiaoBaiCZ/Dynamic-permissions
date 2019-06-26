@@ -21,7 +21,7 @@ abstract class BaseCloseFragment extends Fragment implements Closeable {
     public void close() {
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
         transaction.remove(this);
-        transaction.commit();
+        transaction.commitAllowingStateLoss();
     }
 
 }

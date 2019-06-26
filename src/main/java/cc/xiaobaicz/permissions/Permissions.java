@@ -24,7 +24,7 @@ public final class Permissions {
             FragmentManager fm = activity.getFragmentManager();
             FragmentTransaction transaction = fm.beginTransaction();
             transaction.add(fragment, "permissions");
-            transaction.commit();
+            transaction.commitAllowingStateLoss();
         } else {
             callback.success();
         }
@@ -51,7 +51,7 @@ public final class Permissions {
             FragmentManager fm = activity.getFragmentManager();
             FragmentTransaction transaction = fm.beginTransaction();
             transaction.add(fragment, "permissions-installpackage");
-            transaction.commit();
+            transaction.commitAllowingStateLoss();
         } else {
             callback.success();
         }
