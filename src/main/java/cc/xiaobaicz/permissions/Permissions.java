@@ -3,7 +3,10 @@ package cc.xiaobaicz.permissions;
 import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
+import android.provider.Settings;
 
 /**
  * 动态权限申请类
@@ -13,7 +16,10 @@ public final class Permissions {
 
     /**
      * 申请权限
+     * @see #requestPermissions(Activity, String[], Callback)
+     * @deprecated
      */
+    @Deprecated
     public static void checkPermissions(final Activity activity, final String[] permissions, final Callback callback) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (activity == null || callback == null) {
@@ -31,9 +37,28 @@ public final class Permissions {
 
     /**
      * 申请权限
+     * @see #requestPermissions(Activity, String, Callback)
+     * @deprecated
      */
+    @Deprecated
     public static void checkPermissions(final Activity activity, final String permissions, final Callback callback) {
         checkPermissions(activity, new String[]{permissions}, callback);
+    }
+
+    /**
+     * 申请权限
+     * @since 1.4.0
+     */
+    public static void requestPermissions(final Activity activity, final String[] permissions, final Callback callback) {
+        checkPermissions(activity, permissions, callback);
+    }
+
+    /**
+     * 申请权限
+     * @since 1.4.0
+     */
+    public static void requestPermissions(final Activity activity, final String permissions, final Callback callback) {
+        checkPermissions(activity, permissions, callback);
     }
 
     /**
@@ -54,6 +79,17 @@ public final class Permissions {
         } else {
             callback.success();
         }
+    }
+
+    /**
+     * 打开程序设置页面
+     * @since 1.4.0
+     */
+    public static void openAppSettings(final Activity activity) {
+        Intent intent = new Intent();
+        intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+        intent.setData(Uri.parse(String.format("package:%s", activity.getPackageName())));
+        activity.startActivity(intent);
     }
 
 }

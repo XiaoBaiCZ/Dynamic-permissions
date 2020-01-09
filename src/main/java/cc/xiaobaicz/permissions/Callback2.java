@@ -7,13 +7,13 @@ package cc.xiaobaicz.permissions;
  */
 public abstract class Callback2 implements Callback {
 
-    /**
-     * 申请失败<br/>
-     * 新增授权失败项
-     */
+    @Override
+    public void failure() {}
+
+    @Override
     public void failure(String[] permissions) {}
 
     @Override
-    public void failure() {}
+    public void neverPrompt(String[] permissions) {}
 
 }

@@ -9,7 +9,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 
 /**
  * 动态权限申请碎片
@@ -21,6 +23,8 @@ public final class PermissionsFragment extends BaseCloseFragment {
     private final int CODE_REQUEST = 0x1000;
 
     private String[] mPermissions;
+    private List<String> mRequestPermissions = new ArrayList<>();
+    private List<String> mNeverPromptPermissions = new ArrayList<>();
 
     private Callback mCallback;
 
@@ -47,6 +51,11 @@ public final class PermissionsFragment extends BaseCloseFragment {
         boolean isSuccess = true;
         for (String p : mPermissions) {
             if (context.checkSelfPermission(p) != PackageManager.PERMISSION_GRANTED) {
+                if (!shouldShowRequestPermissionRationale(p)) {
+                    mNeverPromptPermissions.add(p);
+                } else {
+                    mRequestPermissions.add(p);
+                }
                 isSuccess = false;
             }
         }
@@ -55,7 +64,12 @@ public final class PermissionsFragment extends BaseCloseFragment {
             close();
             return;
         }
-        requestPermissions(mPermissions, CODE_REQUEST);
+        if (mRequestPermissions.size() == 0) {
+            onFailure(getRequestPermissions());
+            close();
+            return;
+        }
+        requestPermissions(getRequestPermissions(), CODE_REQUEST);
     }
 
     @Override
@@ -76,13 +90,38 @@ public final class PermissionsFragment extends BaseCloseFragment {
             } else {
                 String[] failures = new String[failureSet.size()];
                 failureSet.toArray(failures);
-                mCallback.failure();
-                if (mCallback instanceof Callback2) {
-                    ((Callback2)mCallback).failure(failures);
-                }
+                onFailure(failures);
             }
             close();
         }
+    }
+
+    /**
+     * @return 永不提示权限
+     * @since 1.4.0
+     */
+    private String[] getNeverPromptPermissions() {
+        final String[] ps = new String[mNeverPromptPermissions.size()];
+        return mNeverPromptPermissions.toArray(ps);
+    }
+
+    /**
+     * @return 需请求权限
+     * @since 1.4.0
+     */
+    private String[] getRequestPermissions() {
+        final String[] ps = new String[mRequestPermissions.size()];
+        return mRequestPermissions.toArray(ps);
+    }
+
+    /**
+     * @param failures 授权失败权限
+     * @since 1.4.0
+     */
+    private void onFailure(String[] failures) {
+        mCallback.failure();
+        mCallback.failure(failures);
+        mCallback.neverPrompt(getNeverPromptPermissions());
     }
 
 }
