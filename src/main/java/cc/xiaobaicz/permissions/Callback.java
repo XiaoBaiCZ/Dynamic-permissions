@@ -1,7 +1,8 @@
 package cc.xiaobaicz.permissions;
 
 /**
- * 权限申请回调接口
+ * 权限申请回调接口<br/>
+ * 回调优先级 failure() -> failure(...) -> neverPrompt(...) -> success()
  * @author BC
  */
 public interface Callback {

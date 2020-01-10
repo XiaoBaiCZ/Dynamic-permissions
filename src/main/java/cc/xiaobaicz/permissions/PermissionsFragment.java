@@ -59,13 +59,13 @@ public final class PermissionsFragment extends BaseCloseFragment {
                 isSuccess = false;
             }
         }
-        if (isSuccess) {
-            mCallback.success();
+        if (mRequestPermissions.size() == 0) {
+            onFailure(getRequestPermissions());
             close();
             return;
         }
-        if (mRequestPermissions.size() == 0) {
-            onFailure(getRequestPermissions());
+        if (isSuccess) {
+            mCallback.success();
             close();
             return;
         }
@@ -85,12 +85,11 @@ public final class PermissionsFragment extends BaseCloseFragment {
                 }
                 index++;
             }
+            String[] failures = new String[failureSet.size()];
+            failureSet.toArray(failures);
+            onFailure(failures);
             if (success) {
                 mCallback.success();
-            } else {
-                String[] failures = new String[failureSet.size()];
-                failureSet.toArray(failures);
-                onFailure(failures);
             }
             close();
         }
@@ -119,9 +118,14 @@ public final class PermissionsFragment extends BaseCloseFragment {
      * @since 1.4.0
      */
     private void onFailure(String[] failures) {
-        mCallback.failure();
-        mCallback.failure(failures);
-        mCallback.neverPrompt(getNeverPromptPermissions());
+        if (failures == null || failures.length > 0) {
+            mCallback.failure();
+            mCallback.failure(failures);
+        }
+        String[] neverPromptPermissions = getNeverPromptPermissions();
+        if (neverPromptPermissions.length > 0) {
+            mCallback.neverPrompt(getNeverPromptPermissions());
+        }
     }
 
 }

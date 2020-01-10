@@ -17,22 +17,6 @@ Permissions.checkPermissions(activity, permissions, new Callback2 {
 });
 ~~~
 
-### 1.4.0
-新增永不提示回调
-~~~java
-Permissions.checkInstallPackagePermission(activity, new Callback2 {
-      @Override
-      public void neverPrompt(String[] s) {
-          Log.e(TAG, "failure");
-      }
-});
-~~~
-新增打开App设置函数
-~~~java
-Permissions.openAppSettings(activity);
-~~~
-
-### 1.2.0
 新增8.0安装Apk权限
 ~~~java
 Permissions.checkInstallPackagePermission(activity, new Callback2 {
