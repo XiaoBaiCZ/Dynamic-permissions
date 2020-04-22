@@ -53,13 +53,12 @@ public final class PermissionsFragment extends BaseCloseFragment {
             if (context.checkSelfPermission(p) != PackageManager.PERMISSION_GRANTED) {
                 if (!shouldShowRequestPermissionRationale(p)) {
                     mNeverPromptPermissions.add(p);
-                } else {
-                    mRequestPermissions.add(p);
                 }
+                mRequestPermissions.add(p);
                 isSuccess = false;
             }
         }
-        if (mRequestPermissions.size() == 0) {
+        if (!isSuccess && mRequestPermissions.size() == 0) {
             onFailure(getRequestPermissions());
             close();
             return;
